@@ -1,10 +1,20 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { IBoard } from "../../types";
 
 type TBoardsState = {
     modalActive: boolean;
     boardArray: IBoard[];
 }
+
+type TAddBoardAction = {
+    board: IBoard;
+}
+
+type TDeleteListAction = {
+    listId: string;
+    boardId: string;
+}
+
 
 const initialState: TBoardsState = {
     modalActive: false,
@@ -52,8 +62,31 @@ const boardSlice = createSlice({
     name: 'boards',
     initialState,
     reducers: {
+        addBoard(state, { payload }: PayloadAction<TAddBoardAction>) {
+            state.boardArray.push(payload.board)
+        },
 
+        deleteList(state, { payload }: PayloadAction<TDeleteListAction>) {
+            state.boardArray = state.boardArray.map(
+                board =>
+                    board.boardId === payload.boardId
+                        ?
+                        {
+                            ...board,
+                            lists: board.lists.filter(
+                                list => list.listId !== payload.listId
+                            )
+                        }
+                        :
+                        board
+            )
+        },
+
+        setModalActive(state, { payload }: PayloadAction<boolean>) {
+            state.modalActive = payload;
+        }
     }
 })
 
+export const { addBoard, deleteList, setModalActive } = boardSlice.actions;
 export const boardReducer = boardSlice.reducer;

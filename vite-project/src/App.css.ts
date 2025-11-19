@@ -3,9 +3,9 @@ import {createGlobalTheme, style} from "@vanilla-extract/css";
 export const vars = createGlobalTheme(":root", {
     color: {
         main: "#ffa726",
-        mainDarker: "f57c00",
+        mainDarker: "#f57c00",
         mainFaded: "#ffb74d",
-        mainFadedBright: "ffb74da6",
+        mainFadedBright: "#ffb74da6",
         list: "rgb(235,236,240)",
         task: "rgb(255,255,255)",
         taskHover: "rgb(245,245,245)",
