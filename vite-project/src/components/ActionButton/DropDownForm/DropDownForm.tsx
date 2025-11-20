@@ -1,6 +1,9 @@
 import React, { useState, type ChangeEvent, type FC } from "react";
 import { FiX } from "react-icons/fi";
 import { useTypedDispatch } from "../../../hooks/redux";
+import { addList, addTask } from "../../../store/slices/boardsSlice";
+import { v4 } from "uuid";
+import { addLog } from "../../../store/slices/loggerSlice";
 
 type TDropDownFormProps = {
     boardId: string;
@@ -32,9 +35,43 @@ const DropDownForm: FC<TDropDownFormProps> = ({
     const handleButtonClick = () => {
         if(text) {
             if(list) {
-                dispatch()
+                dispatch(
+                    addList({
+                        boardId,
+                        list: {listId: v4(), listName: text, tasks: []}
+                    }
+                )
+            );
+            dispatch(
+                addLog({
+                    logId:v4(),
+                    logMessage: `리스트 생성하기: ${text}`,
+                    logAuthor: "user",
+                    logTimestamp: String(Date.now())
+                })
+            )
             }else {
+                dispatch(
+                    addTask({
+                        boardId,
+                        listId,
+                        task: {
+                            taskId: v4(),
+                            taskName: text,
+                            taskDescription: "",
+                            taskOwner: "User"
+                        }
+                    })
+                )
 
+                dispatch(
+                    addLog({
+                        logId:v4(),
+                        logMessage: `일 생성하기: ${text}`,
+                        logAuthor: "user",
+                        logTimestamp: String(Date.now())
+                    })
+                )
             }
         }
     }
@@ -45,11 +82,11 @@ const DropDownForm: FC<TDropDownFormProps> = ({
             value={text}
             onChange={handleTextChange}
             autoFocus
-            placeholder="formPlaceholder"
+            placeholder={formPlaceholder}
             onBlur={() => setIsFormOpen(false)}
             />
             <div>
-                <button onMouseDown={}>
+                <button onMouseDown={handleButtonClick}>
                     {buttonTitle}
                 </button>
                 <FiX />
